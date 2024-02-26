@@ -1,3 +1,4 @@
+import 'package:bullet_news/widgets/news_list.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,17 +30,17 @@ class _HomePageState extends State<HomePage> {
                 Tab(text: 'TRAVEL'),
               ],
             )),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            Center(child: Text('Content for TODAY')),
-            Center(child: Text('Content for POLITICS')),
-            Center(child: Text('Content for ENTERTAINMENT')),
-            Center(child: Text('Content for SPORTS')),
-            Center(child: Text('Content for TECH')),
-            Center(child: Text('Content for HEALTH')),
-            Center(child: Text('Content for SCIENCE')),
-            Center(child: Text('Content for BUSINESS')),
-            Center(child: Text('Content for TRAVEL')),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
+            NewsList(category: "TODAY"),
           ],
         ),
       ),
