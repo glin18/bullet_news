@@ -1,4 +1,4 @@
-import 'package:bullet_news/home_page.dart';
+import 'package:bullet_news/views/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
