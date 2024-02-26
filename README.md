@@ -1,16 +1,11 @@
-# bullet_news
+# Bullet News
 
-A new Flutter project.
+Don't have time to read lengthy news?
 
-## Getting Started
+Read concise and summarized news powered by AI
 
-This project is a starting point for a Flutter application.
+## Inspiration
 
-A few resources to get you started if this is your first Flutter project:
+Most of us do not have time to read the news. We'd like to quickly understand recent events without reading 10 minute articles.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Our news articles are summarized by AI and only display the most important information.
