@@ -10,12 +10,24 @@ class NewsListItem extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0), // Add padding inside the card
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (news.urlToImage.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  news.urlToImage,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  height: 200,
+                ),
+              ),
+            const SizedBox(height: 8),
             Text(
               news.title,
+              style: Theme.of(context).textTheme.titleLarge,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -23,6 +35,7 @@ class NewsListItem extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               news.description,
+              style: Theme.of(context).textTheme.bodyMedium,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
