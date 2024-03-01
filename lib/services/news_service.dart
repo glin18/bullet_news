@@ -4,7 +4,8 @@ import '../models/news.dart';
 
 class NewsService {
   Future<List<News>> fetchNews() async {
-    final response = await http.get(Uri.parse(''));
+    final response =
+        await http.get(Uri.parse('http://localhost:8080/api/category/1/news'));
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((news) => News.fromJson(news)).toList();
