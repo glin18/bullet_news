@@ -9,7 +9,27 @@ class NewsListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.all(8.0),
-      child: Text(news.title),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0), // Add padding inside the card
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              news.title,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              news.description,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
