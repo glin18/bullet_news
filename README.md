@@ -13,3 +13,7 @@ Our news articles are summarized by AI and only display the most important infor
 ## Screenshots
 
 <img src="assets/images/screenshots/bullet_news_screenshot.png" alt="Alt text for screenshot" width="400"/>
+
+## Backend
+
+https://github.com/glin18/bulletnews-backend
