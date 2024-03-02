@@ -46,7 +46,8 @@ class _HomePageState extends State<HomePage> {
               ),
               body: TabBarView(
                 children: categories
-                    .map((category) => NewsList(category: category.name))
+                    .map((category) =>
+                        NewsList(category: category.name, id: category.id))
                     .toList(),
               ),
             ),

@@ -5,8 +5,9 @@ import 'package:bullet_news/services/news_service.dart';
 
 class NewsList extends StatefulWidget {
   final String category;
+  final String id;
 
-  const NewsList({super.key, required this.category});
+  const NewsList({super.key, required this.category, required this.id});
 
   @override
   State<NewsList> createState() => _NewsListState();
@@ -24,7 +25,7 @@ class _NewsListState extends State<NewsList> {
 
   Future<void> _fetchNews() async {
     try {
-      List<News> fetchedNews = await NewsService().fetchNews();
+      List<News> fetchedNews = await NewsService().fetchNews(widget.id);
       setState(() {
         _newsList.addAll(fetchedNews);
         _isLoading = false;

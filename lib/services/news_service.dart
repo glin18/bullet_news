@@ -4,9 +4,10 @@ import '../models/news.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NewsService {
-  Future<List<News>> fetchNews() async {
+  Future<List<News>> fetchNews(String id) async {
     String baseUrl = dotenv.env['API_BASE_URL'] ?? "";
-    final response = await http.get(Uri.parse('$baseUrl/api/category/1/news'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/api/category/$id/news'));
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((news) => News.fromJson(news)).toList();
