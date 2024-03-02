@@ -26,15 +26,15 @@ class News {
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
       id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      summary: json['summary'],
-      url: json['url'],
-      urlToImage: json['urlToImage'],
-      publishedAt: json['publishedAt'],
-      content: json['content'],
-      sourceName: json['sourceName'],
-      categoryName: json['categoryName'],
+      title: json['title'] ?? 'No Title',
+      description: json['description'] ?? 'No Description',
+      summary: json['summary'] ?? 'No Summary',
+      url: json['url'] ?? '',
+      urlToImage: json['urlToImage'] ?? '',
+      publishedAt: json['publishedAt'] ?? '',
+      content: json['content'] ?? 'No Content',
+      sourceName: json['sourceName'] ?? 'No Source Name',
+      categoryName: json['categoryName'] ?? 'No Category',
     );
   }
 }
