@@ -17,7 +17,14 @@ class ArticleDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(news.urlToImage),
+            if (news.urlToImage.isNotEmpty)
+              Image.network(
+                news.urlToImage,
+                errorBuilder: (context, error, stackTrace) {
+                  debugPrint(news.urlToImage);
+                  return const SizedBox.shrink();
+                },
+              ),
             const SizedBox(height: 8),
             Text(
               news.title,

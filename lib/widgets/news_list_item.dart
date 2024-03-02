@@ -24,16 +24,38 @@ class NewsListItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (news.urlToImage.isNotEmpty)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    news.urlToImage,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    height: 200,
-                  ),
-                ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: news.urlToImage.isNotEmpty
+                    ? Image.network(
+                        news.urlToImage,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        height: 200,
+                        errorBuilder: (context, error, stackTrace) {
+                          debugPrint(news.urlToImage);
+                          return Container(
+                            width: double.infinity,
+                            height:
+                                200, // Specify a fixed height for consistency
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(
+                                  255, 57, 52, 58), // A light grey background
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          );
+                        },
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 200, // Specify a fixed height for consistency
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(
+                              255, 57, 52, 58), // A light grey background
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+              ),
               const SizedBox(height: 8),
               Text(
                 news.title,
