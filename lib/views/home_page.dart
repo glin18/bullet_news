@@ -1,3 +1,5 @@
+import 'package:bullet_news/models/category.dart';
+import 'package:bullet_news/services/category_service.dart';
 import 'package:bullet_news/widgets/news_list.dart';
 import 'package:flutter/material.dart';
 
@@ -9,41 +11,50 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<Category>> _categoriesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _categoriesFuture = CategoryService().fetchNews();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 9,
-      child: Scaffold(
-        appBar: AppBar(
-            title: const Text("Bullet News"),
-            bottom: const TabBar(
-              isScrollable: true,
-              tabs: [
-                Tab(text: 'TODAY'),
-                Tab(text: 'POLITICS'),
-                Tab(text: 'ENTERTAINMENT'),
-                Tab(text: 'SPORTS'),
-                Tab(text: 'TECH'),
-                Tab(text: 'HEALTH'),
-                Tab(text: 'SCIENCE'),
-                Tab(text: 'BUSINESS'),
-                Tab(text: 'TRAVEL'),
-              ],
-            )),
-        body: TabBarView(
-          children: [
-            NewsList(category: "TODAY"),
-            NewsList(category: "POLITICS"),
-            NewsList(category: "ENTERTAINMENT"),
-            NewsList(category: "SPORTS"),
-            NewsList(category: "TECH"),
-            NewsList(category: "HEALTH"),
-            NewsList(category: "SCIENCE"),
-            NewsList(category: "BUSINESS"),
-            NewsList(category: "TRAVEL"),
-          ],
-        ),
-      ),
+    return FutureBuilder<List<Category>>(
+      future: _categoriesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
+        } else if (snapshot.hasError) {
+          return Scaffold(
+              body: Center(child: Text("Error: ${snapshot.error}")));
+        } else if (snapshot.hasData) {
+          final categories = snapshot.data!;
+          return DefaultTabController(
+            length: categories.length,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text("Bullet News"),
+                bottom: TabBar(
+                  isScrollable: true,
+                  tabs: categories
+                      .map((category) => Tab(text: category.name.toUpperCase()))
+                      .toList(),
+                ),
+              ),
+              body: TabBarView(
+                children: categories
+                    .map((category) => NewsList(category: category.name))
+                    .toList(),
+              ),
+            ),
+          );
+        } else {
+          return const Scaffold(body: Center(child: Text("No data")));
+        }
+      },
     );
   }
 }
