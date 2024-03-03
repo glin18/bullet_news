@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/release
 
 .env
+
+# Firebase credentials
+GoogleService-Info.plist
+google-services.json
+
+# CocoaPods
+/Pods/
+
