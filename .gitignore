@@ -51,3 +51,4 @@ google-services.json
 # CocoaPods
 /Pods/
 
+dump.rdb
