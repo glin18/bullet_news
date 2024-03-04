@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Category>> _categoriesFuture;
+  String? userEmail = FirebaseAuth.instance.currentUser?.email;
 
   @override
   void initState() {
@@ -57,13 +58,13 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    const DrawerHeader(
-                      decoration: BoxDecoration(
+                    DrawerHeader(
+                      decoration: const BoxDecoration(
                         color: Color.fromARGB(171, 155, 39, 176),
                       ),
                       child: Text(
-                        'Menu',
-                        style: TextStyle(
+                        userEmail.toString(),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                         ),
