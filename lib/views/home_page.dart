@@ -1,6 +1,7 @@
 import 'package:bullet_news/models/category.dart';
 import 'package:bullet_news/services/category_service.dart';
 import 'package:bullet_news/widgets/news_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,11 +13,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Category>> _categoriesFuture;
+  String? userEmail = FirebaseAuth.instance.currentUser?.email;
 
   @override
   void initState() {
     super.initState();
     _categoriesFuture = CategoryService().fetchNews();
+  }
+
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      debugPrint("Error signing out: $e");
+    }
   }
 
   @override
@@ -42,6 +52,44 @@ class _HomePageState extends State<HomePage> {
                   tabs: categories
                       .map((category) => Tab(text: category.name.toUpperCase()))
                       .toList(),
+                ),
+              ),
+              drawer: Drawer(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    DrawerHeader(
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(171, 155, 39, 176),
+                      ),
+                      child: Text(
+                        userEmail.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.home),
+                      title: const Text('Home'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Settings'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.exit_to_app),
+                      title: const Text('Logout'),
+                      onTap: _logout,
+                    ),
+                  ],
                 ),
               ),
               body: TabBarView(
