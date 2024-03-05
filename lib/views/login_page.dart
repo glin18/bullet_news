@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,6 +37,37 @@ class _LoginPageState extends State<LoginPage> {
           SnackBar(content: Text(e.code)),
         );
       }
+    }
+  }
+
+  Future<User?> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.toString());
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to sign in with Google: ${e.code}")),
+        );
+      }
+      return null;
     }
   }
 
@@ -129,6 +161,17 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(_isRegisterMode
                     ? 'Already have an account? Sign in'
                     : 'Don\'t have an account? Register'),
+              ),
+              ElevatedButton(
+                onPressed: _signInWithGoogle,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/images/logos/google.png', height: 20.0),
+                    const SizedBox(width: 10),
+                    const Text('Sign in with Google'),
+                  ],
+                ),
               )
             ],
           ),

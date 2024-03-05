@@ -66,6 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '931939716590',
     projectId: 'bulletnews-fb8ae',
     storageBucket: 'bulletnews-fb8ae.appspot.com',
+    androidClientId: '931939716590-f0p2hos64pcds7k223jmpq2u9cc9qmsm.apps.googleusercontent.com',
+    iosClientId: '931939716590-vkvqqsh4745m0u1u8n5ssuakea939u98.apps.googleusercontent.com',
     iosBundleId: 'com.example.bulletNews',
   );
 
@@ -75,6 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '931939716590',
     projectId: 'bulletnews-fb8ae',
     storageBucket: 'bulletnews-fb8ae.appspot.com',
+    androidClientId: '931939716590-f0p2hos64pcds7k223jmpq2u9cc9qmsm.apps.googleusercontent.com',
+    iosClientId: '931939716590-4jdds87upkkfvmdbol3tij7hiqp6ptto.apps.googleusercontent.com',
     iosBundleId: 'com.example.bulletNews.RunnerTests',
   );
 }
