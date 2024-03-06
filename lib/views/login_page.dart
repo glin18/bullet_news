@@ -1,3 +1,4 @@
+import 'package:bullet_news/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isRegisterMode = false;
+  final UserService _userService = UserService();
 
   @override
   void dispose() {
@@ -28,8 +30,12 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      final User? user = userCredential.user;
 
-      debugPrint("User signed in: ${userCredential.user}");
+      if (user != null) {
+        await _userService.createOrUpdateUser(user);
+        debugPrint("User signed in: ${userCredential.user}");
+      }
     } on FirebaseAuthException catch (e) {
       debugPrint("Error signing in: $e");
       if (mounted) {
@@ -59,7 +65,14 @@ class _LoginPageState extends State<LoginPage> {
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
-      return userCredential.user;
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        await _userService.createOrUpdateUser(user);
+        return user;
+      }
+      debugPrint("No user returned by Google sign-in");
+      return null;
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
       if (mounted) {
@@ -78,8 +91,12 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      final User? user = userCredential.user;
 
-      debugPrint("User registered: ${userCredential.user}");
+      if (user != null) {
+        await _userService.createOrUpdateUser(user);
+        debugPrint("User registered: ${userCredential.user}");
+      }
     } on FirebaseAuthException catch (e) {
       debugPrint("Error registering: $e");
       String errorMessage;
