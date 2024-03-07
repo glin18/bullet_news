@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 class News {
   final int id;
   final String title;
@@ -10,6 +12,7 @@ class News {
   final String sourceName;
   final String categoryName;
   final List<String> usersWhoLiked;
+  final bool isSaved;
 
   News({
     required this.id,
@@ -22,10 +25,12 @@ class News {
     required this.content,
     required this.sourceName,
     required this.categoryName,
-    required this.usersWhoLiked
+    required this.usersWhoLiked,
+    required this.isSaved
   });
 
   factory News.fromJson(Map<String, dynamic> json) {
+    final String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
     return News(
       id: json['id'],
       title: json['title'] ?? 'No Title',
@@ -38,6 +43,7 @@ class News {
       sourceName: json['sourceName'] ?? 'No Source Name',
       categoryName: json['categoryName'] ?? 'No Category',
       usersWhoLiked: List<String>.from(json['usersWhoLiked'] ?? []),
+      isSaved: List<String>.from(json['usersWhoSaved']).contains(userId)
     );
   }
 }

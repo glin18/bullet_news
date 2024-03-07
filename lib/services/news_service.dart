@@ -67,4 +67,24 @@ class NewsService {
       throw Exception('Failed to like news');
     }
   }
+
+  Future<void> saveNews(String newsId) async {
+    String baseUrl = dotenv.env['API_BASE_URL'] ?? "";
+    String? token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token == null) {
+      throw Exception('Not authenticated');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/news/$newsId/save'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to like news');
+    }
+  }
 }

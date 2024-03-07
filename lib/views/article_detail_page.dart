@@ -35,6 +35,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         news = fetchedNews;
         isLoading = false;
         isLiked = news.usersWhoLiked.contains(userId);
+        isSaved = news.isSaved;
         likesCount = news.usersWhoLiked.length;
       });
     } catch (e) {
@@ -53,6 +54,23 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     try {
       await newsService.likeNews(news.id.toString());
     } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to like the news'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _saveNews() async {
+    setState(() {
+      isSaved = !isSaved;
+    });
+    try {
+      await newsService.saveNews(news.id.toString());
+    } catch (e){
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -118,11 +136,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                         icon: Icon(
                             isSaved ? Icons.bookmark : Icons.bookmark_border),
                         color: Colors.blue,
-                        onPressed: () async {
-                          setState(() {
-                            isSaved = !isSaved;
-                          });
-                        },
+                        onPressed: _saveNews
                       ),
                       const SizedBox(width: 8),
                       if (isSaved)
