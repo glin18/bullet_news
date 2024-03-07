@@ -1,22 +1,49 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bullet_news/models/news.dart';
 
 import '../services/news_service.dart';
 
 class ArticleDetailPage extends StatefulWidget {
-  final News news;
+  final int newsId;
 
-  const ArticleDetailPage({super.key, required this.news});
+  const ArticleDetailPage({super.key, required this.newsId});
 
   @override
   State<ArticleDetailPage> createState() => _ArticleDetailPageState();
 }
 
 class _ArticleDetailPageState extends State<ArticleDetailPage> {
+  late News news;
+  bool isLoading = true;
   bool isLiked = false;
   int likesCount = 0;
   bool isSaved = false;
   final NewsService newsService = NewsService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNewsDetails();
+  }
+
+  Future<void> _fetchNewsDetails() async {
+    try {
+      News fetchedNews = await NewsService().fetchNewsById(widget.newsId);
+      final String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+      setState(() {
+        news = fetchedNews;
+        isLoading = false;
+        isLiked = news.usersWhoLiked.contains(userId);
+        likesCount = news.usersWhoLiked.length;
+      });
+    } catch (e) {
+      debugPrint("Failed to fetch news details: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   Future<void> _likeNews() async {
     setState(() {
@@ -24,7 +51,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       isLiked ? likesCount++ : likesCount--;
     });
     try {
-      await newsService.likeNews(widget.news.id.toString());
+      await newsService.likeNews(news.id.toString());
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -38,67 +65,74 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.news.title),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.news.urlToImage.isNotEmpty)
-              Image.network(
-                widget.news.urlToImage,
-                errorBuilder: (context, error, stackTrace) {
-                  debugPrint(widget.news.urlToImage);
-                  return const SizedBox.shrink();
-                },
+    return isLoading
+        ? Scaffold(
+            appBar: AppBar(title: const Text('Loading...')),
+            body: const Center(child: CircularProgressIndicator()),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(news.title),
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (news.urlToImage.isNotEmpty)
+                    Image.network(
+                      news.urlToImage,
+                      errorBuilder: (context, error, stackTrace) {
+                        debugPrint(news.urlToImage);
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  const SizedBox(height: 8),
+                  Text(
+                    news.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    news.publishedAt,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    news.summary,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      IconButton(
+                          icon: Icon(
+                              isLiked ? Icons.favorite : Icons.favorite_border),
+                          color: Colors.red,
+                          onPressed: _likeNews),
+                      const SizedBox(width: 8),
+                      Text("$likesCount likes",
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        icon: Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border),
+                        color: Colors.blue,
+                        onPressed: () async {
+                          setState(() {
+                            isSaved = !isSaved;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      if (isSaved)
+                        Text("Saved",
+                            style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  ),
+                ],
               ),
-            const SizedBox(height: 8),
-            Text(
-              widget.news.title,
-              style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 8),
-            Text(
-              widget.news.publishedAt,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.news.summary,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                IconButton(
-                    icon:
-                        Icon(isLiked ? Icons.favorite : Icons.favorite_border),
-                    color: Colors.red,
-                    onPressed: _likeNews),
-                const SizedBox(width: 8),
-                Text("$likesCount likes",
-                    style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(width: 16),
-                IconButton(
-                  icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_border),
-                  color: Colors.blue,
-                  onPressed: () async {
-                    setState(() {
-                      isSaved = !isSaved;
-                    });
-                  },
-                ),
-                const SizedBox(width: 8),
-                if (isSaved)
-                  Text("Saved", style: Theme.of(context).textTheme.bodyMedium),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
