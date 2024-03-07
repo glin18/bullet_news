@@ -9,6 +9,7 @@ class News {
   final String content;
   final String sourceName;
   final String categoryName;
+  final List<String> usersWhoLiked;
 
   News({
     required this.id,
@@ -21,6 +22,7 @@ class News {
     required this.content,
     required this.sourceName,
     required this.categoryName,
+    required this.usersWhoLiked
   });
 
   factory News.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class News {
       content: json['content'] ?? 'No Content',
       sourceName: json['sourceName'] ?? 'No Source Name',
       categoryName: json['categoryName'] ?? 'No Category',
+      usersWhoLiked: List<String>.from(json['usersWhoLiked'] ?? []),
     );
   }
 }
