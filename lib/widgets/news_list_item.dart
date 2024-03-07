@@ -33,7 +33,7 @@ class NewsListItem extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ArticleDetailPage(news: news),
+        builder: (_) => ArticleDetailPage(newsId: news.id),
       ),
     );
   }

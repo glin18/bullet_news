@@ -7,9 +7,16 @@ class UserService {
   final String _baseUrl = dotenv.env['API_BASE_URL'] ?? "";
 
   Future<bool> createOrUpdateUser(User user) async {
+    String? token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token == null) {
+      throw Exception('Not authenticated');
+    }
     final response = await http.post(
       Uri.parse('$_baseUrl/api/users'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json', // Optional: Specify content type
+      },
       body: json.encode({
         'uuid': user.uid,
         'email': user.email,
