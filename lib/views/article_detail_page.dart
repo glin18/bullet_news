@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bullet_news/models/news.dart';
 
+import '../services/news_service.dart';
+
 class ArticleDetailPage extends StatefulWidget {
   final News news;
 
@@ -14,6 +16,25 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   bool isLiked = false;
   int likesCount = 0;
   bool isSaved = false;
+  final NewsService newsService = NewsService();
+
+  Future<void> _likeNews() async {
+    setState(() {
+      isLiked = !isLiked;
+      isLiked ? likesCount++ : likesCount--;
+    });
+    try {
+      await newsService.likeNews(widget.news.id.toString());
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to like the news'),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,35 +70,30 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               widget.news.summary,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20), // Add some space before the like button
+            const SizedBox(height: 20),
             Row(
               children: [
                 IconButton(
-                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
-                  color: Colors.red,
-                  onPressed: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                      isLiked ? likesCount++ : likesCount--;
-                    });
-                  },
-                ),
+                    icon:
+                        Icon(isLiked ? Icons.favorite : Icons.favorite_border),
+                    color: Colors.red,
+                    onPressed: _likeNews),
                 const SizedBox(width: 8),
                 Text("$likesCount likes",
                     style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(width: 16), // Space between like and save buttons
+                const SizedBox(width: 16),
                 IconButton(
                   icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_border),
                   color: Colors.blue,
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       isSaved = !isSaved;
-                      // Here you can also handle the save action with your backend.
                     });
                   },
                 ),
                 const SizedBox(width: 8),
-                if (isSaved) Text("Saved", style: Theme.of(context).textTheme.bodyMedium),
+                if (isSaved)
+                  Text("Saved", style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ],
