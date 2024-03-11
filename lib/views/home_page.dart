@@ -1,5 +1,6 @@
 import 'package:bullet_news/models/category.dart';
 import 'package:bullet_news/services/category_service.dart';
+import 'package:bullet_news/views/saved_news_page.dart';
 import 'package:bullet_news/widgets/news_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,16 @@ class _HomePageState extends State<HomePage> {
                       title: const Text('Settings'),
                       onTap: () {
                         Navigator.of(context).pop();
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.bookmark),
+                      title: const Text('Saved News'),
+                      onTap: () {
+                        Navigator.of(context).pop(); // Close the drawer
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => const SavedNewsPage()),
+                        );
                       },
                     ),
                     ListTile(
