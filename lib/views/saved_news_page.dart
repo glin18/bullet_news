@@ -1,3 +1,4 @@
+import 'package:bullet_news/widgets/saved_news_list.dart';
 import 'package:flutter/material.dart';
 
 class SavedNewsPage extends StatelessWidget {
@@ -9,9 +10,7 @@ class SavedNewsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Saved News'),
       ),
-      body: const Center(
-        child: Text('Display your saved news here'),
-      ),
+      body: const SavedNewsList(),
     );
   }
 }

@@ -26,6 +26,27 @@ class NewsService {
     }
   }
 
+  Future<List<News>> fetchSavedNews() async {
+    String baseUrl = dotenv.env['API_BASE_URL'] ?? "";
+    String? token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token == null) {
+      throw Exception('Not authenticated');
+    }
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/news/saved'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((news) => News.fromJson(news)).toList();
+    } else {
+      throw Exception('Failed to load news');
+    }
+  }
+
   Future<News> fetchNewsById(int id) async {
     String baseUrl = dotenv.env['API_BASE_URL'] ?? "";
     String? token = await FirebaseAuth.instance.currentUser?.getIdToken();
