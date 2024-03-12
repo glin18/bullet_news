@@ -1,4 +1,5 @@
 import 'package:bullet_news/services/comment_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,7 @@ class CommentsList extends StatefulWidget {
 class _CommentsListState extends State<CommentsList> {
   final CommentService commentService = CommentService();
   late List<Comment> comments;
+  String userId = "";
   bool _isLoading = true;
   final TextEditingController _commentController = TextEditingController();
 
@@ -32,6 +34,7 @@ class _CommentsListState extends State<CommentsList> {
       setState(() {
         comments = fetchedComments;
         _isLoading = false;
+        userId = FirebaseAuth.instance.currentUser?.uid ?? "";
       });
     } catch (e) {
       debugPrint("Failed to fetch comments: $e");
@@ -92,35 +95,40 @@ class _CommentsListState extends State<CommentsList> {
                           return Column(
                             children: [
                               ListTile(
-                                title: Text(
-                                  comment.content,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                  title: Text(
+                                    comment.content,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                subtitle: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "By: ${comment.userId}",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
+                                  subtitle: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "By: ${comment.userId}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      DateFormat('yyyy-MM-dd HH:mm')
-                                          .format(comment.createdTime),
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
+                                      Text(
+                                        DateFormat('yyyy-MM-dd HH:mm')
+                                            .format(comment.createdTime),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    ],
+                                  ),
+                                  trailing: userId == comment.uuid
+                                      ? IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {},
+                                        )
+                                      : null),
                               const Divider(
                                 height: 1,
                                 color: Colors.grey,

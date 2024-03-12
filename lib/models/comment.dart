@@ -4,6 +4,7 @@ class Comment {
   final DateTime createdTime;
   final int newsId;
   final int userId;
+  final String uuid;
 
   Comment({
     required this.id,
@@ -11,6 +12,7 @@ class Comment {
     required this.createdTime,
     required this.newsId,
     required this.userId,
+    required this.uuid
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Comment {
       createdTime: DateTime.parse(json['createdTime']),
       newsId: json['newsId'],
       userId: json['userId'],
+      uuid: json['uuid']
     );
   }
 }
