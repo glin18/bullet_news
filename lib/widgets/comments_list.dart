@@ -1,7 +1,7 @@
+import 'package:bullet_news/services/comment_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/comment.dart';
-import '../services/news_service.dart';
 
 class CommentsList extends StatefulWidget {
   final int newsId;
@@ -13,7 +13,7 @@ class CommentsList extends StatefulWidget {
 }
 
 class _CommentsListState extends State<CommentsList> {
-  final NewsService newsService = NewsService();
+  final CommentService commentService = CommentService();
   late List<Comment> comments;
   bool _isLoading = true;
   final TextEditingController _commentController = TextEditingController();
@@ -27,13 +27,26 @@ class _CommentsListState extends State<CommentsList> {
   Future<void> _fetchComments() async {
     try {
       final fetchedComments =
-          await newsService.fetchCommentsForNews(widget.newsId.toString());
+          await commentService.fetchCommentsForNews(widget.newsId.toString());
       setState(() {
         comments = fetchedComments;
         _isLoading = false;
       });
     } catch (e) {
       debugPrint("Failed to fetch comments: $e");
+    }
+  }
+
+  Future<void> _addComment() async {
+    String content = _commentController.text.trim();
+    if (content.isNotEmpty) {
+      try {
+        await commentService.addCommentForNews(widget.newsId.toString(), content);
+        await _fetchComments();
+        _commentController.clear();
+      } catch (e) {
+        debugPrint("Failed to create comment: $e");
+      }
     }
   }
 
@@ -60,7 +73,7 @@ class _CommentsListState extends State<CommentsList> {
                     ),
                     const SizedBox(width: 8.0),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _addComment,
                       child: const Text('Add'),
                     ),
                   ],
