@@ -1,7 +1,9 @@
+import 'package:bullet_news/widgets/comments_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bullet_news/models/news.dart';
 
+import '../models/comment.dart';
 import '../services/news_service.dart';
 
 class ArticleDetailPage extends StatefulWidget {
@@ -15,6 +17,7 @@ class ArticleDetailPage extends StatefulWidget {
 
 class _ArticleDetailPageState extends State<ArticleDetailPage> {
   late News news;
+  late List<Comment> comments;
   bool isLoading = true;
   bool isLiked = false;
   int likesCount = 0;
@@ -70,7 +73,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     });
     try {
       await newsService.saveNews(news.id.toString());
-    } catch (e){
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -133,17 +136,18 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                           style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(width: 16),
                       IconButton(
-                        icon: Icon(
-                            isSaved ? Icons.bookmark : Icons.bookmark_border),
-                        color: Colors.blue,
-                        onPressed: _saveNews
-                      ),
+                          icon: Icon(
+                              isSaved ? Icons.bookmark : Icons.bookmark_border),
+                          color: Colors.blue,
+                          onPressed: _saveNews),
                       const SizedBox(width: 8),
                       if (isSaved)
                         Text("Saved",
                             style: Theme.of(context).textTheme.bodyMedium),
                     ],
                   ),
+                  const SizedBox(height: 20),
+                  CommentsList(newsId: widget.newsId),
                 ],
               ),
             ),
