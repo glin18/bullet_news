@@ -2,7 +2,6 @@ import 'package:bullet_news/services/comment_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../models/comment.dart';
 
 class CommentsList extends StatefulWidget {
@@ -53,6 +52,11 @@ class _CommentsListState extends State<CommentsList> {
         debugPrint("Failed to create comment: $e");
       }
     }
+  }
+
+  Future<void> _deleteComment(int commentId) async {
+    await commentService.deleteCommentById(commentId);
+    await _fetchComments();
   }
 
   @override
@@ -126,7 +130,9 @@ class _CommentsListState extends State<CommentsList> {
                                   trailing: userId == comment.uuid
                                       ? IconButton(
                                           icon: const Icon(Icons.delete),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            _deleteComment(comment.id);
+                                          },
                                         )
                                       : null),
                               const Divider(
