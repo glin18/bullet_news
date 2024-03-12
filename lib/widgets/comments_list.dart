@@ -16,6 +16,7 @@ class _CommentsListState extends State<CommentsList> {
   final NewsService newsService = NewsService();
   late List<Comment> comments;
   bool _isLoading = true;
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -42,43 +43,68 @@ class _CommentsListState extends State<CommentsList> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : comments.isNotEmpty
-            ? SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    final comment = comments[index];
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Text(
-                            comment.content,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight:
-                                  FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            "By: ${comment.userId}",
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                          ),
+        : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Add a comment...',
+                          border: OutlineInputBorder(),
                         ),
-                        const Divider(
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Add'),
+                    ),
+                  ],
                 ),
-              )
-            : const Center(
-                child: Text('No comments'),
-              );
+              ),
+              const SizedBox(height: 10),
+              comments.isNotEmpty
+                  ? SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: comments.length,
+                        itemBuilder: (context, index) {
+                          final comment = comments[index];
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  comment.content,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  "By: ${comment.userId}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              const Divider(
+                                height: 1,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  : const Center(
+                      child: Text('No comments'),
+                    ),
+            ],
+          );
   }
 }
