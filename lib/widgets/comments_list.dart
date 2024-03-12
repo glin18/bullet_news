@@ -100,7 +100,8 @@ class _CommentsListState extends State<CommentsList> {
                                   ),
                                 ),
                                 subtitle: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "By: ${comment.userId}",
@@ -110,7 +111,8 @@ class _CommentsListState extends State<CommentsList> {
                                       ),
                                     ),
                                     Text(
-                                      DateFormat('yyyy-MM-dd HH:mm').format(comment.createdTime),
+                                      DateFormat('yyyy-MM-dd HH:mm')
+                                          .format(comment.createdTime),
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
@@ -131,6 +133,7 @@ class _CommentsListState extends State<CommentsList> {
                   : const Center(
                       child: Text('No comments'),
                     ),
+              const SizedBox(height: 10)
             ],
           );
   }
