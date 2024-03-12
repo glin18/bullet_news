@@ -1,5 +1,6 @@
 import 'package:bullet_news/services/comment_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/comment.dart';
 
@@ -41,7 +42,8 @@ class _CommentsListState extends State<CommentsList> {
     String content = _commentController.text.trim();
     if (content.isNotEmpty) {
       try {
-        await commentService.addCommentForNews(widget.newsId.toString(), content);
+        await commentService.addCommentForNews(
+            widget.newsId.toString(), content);
         await _fetchComments();
         _commentController.clear();
       } catch (e) {
@@ -97,12 +99,24 @@ class _CommentsListState extends State<CommentsList> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  "By: ${comment.userId}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
+                                subtitle: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "By: ${comment.userId}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat('yyyy-MM-dd HH:mm').format(comment.createdTime),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const Divider(
